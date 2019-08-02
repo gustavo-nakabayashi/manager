@@ -2,9 +2,19 @@ import React, { Component } from "react";
 import Button from "./common/Button";
 import Input from "./common/Input";
 import Card from "./common/Card";
+import Spinner from "./common/Spinner";
 import CardSection from "./common/CardSection";
 import { connect } from "react-redux";
-import { emailChanged, passwordChanged } from "../actions";
+import { emailChanged, passwordChanged, loginUser } from "../actions";
+import styled from "styled-components";
+import { View } from "react-native";
+
+const ErrorText = styled.Text`
+  color: red;
+  align-self: center;
+  font-size: 20px;
+`;
+
 export class LoginForm extends Component {
   onEmailChange = text => {
     this.props.emailChanged(text);
@@ -14,6 +24,28 @@ export class LoginForm extends Component {
     this.props.passwordChanged(text);
   };
 
+  onButtonPress = () => {
+    const { email, password } = this.props;
+    console.log(email);
+    this.props.loginUser({ email, password });
+  };
+
+  renderError() {
+    if (this.props.error) {
+      return (
+        <View style={{ backgroundColor: "white" }}>
+          <ErrorText>{this.props.error}</ErrorText>
+        </View>
+      );
+    }
+  }
+
+  renderButton() {
+    if (this.props.loading) {
+      return <Spinner />;
+    }
+    return <Button onPress={this.onButtonPress}> Login</Button>;
+  }
   render() {
     return (
       <Card>
@@ -35,10 +67,8 @@ export class LoginForm extends Component {
             value={this.props.password}
           />
         </CardSection>
-
-        <CardSection>
-          <Button> Login</Button>
-        </CardSection>
+        {this.renderError()}
+        <CardSection>{this.renderButton()}</CardSection>
       </Card>
     );
   }
@@ -47,11 +77,13 @@ export class LoginForm extends Component {
 const mapStateToProps = state => {
   return {
     email: state.auth.email,
-    password: state.auth.password
+    password: state.auth.password,
+    error: state.auth.error,
+    loading: state.auth.loading
   };
 };
 
 export default connect(
   mapStateToProps,
-  { emailChanged, passwordChanged }
+  { emailChanged, passwordChanged, loginUser }
 )(LoginForm);
