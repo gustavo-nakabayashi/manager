@@ -14,7 +14,7 @@ const WrapperView = styled.View`
 `;
 
 const CardSection = props => {
-  return <WrapperView>{props.children}</WrapperView>;
+  return <WrapperView style={props.style}>{props.children}</WrapperView>;
 };
 
 export default CardSection;
