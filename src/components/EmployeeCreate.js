@@ -3,7 +3,7 @@ import Card from "./common/Card";
 import CardSection from "./common/CardSection";
 import Button from "./common/Button";
 import { connect } from "react-redux";
-import { employeeUpdate, employeeCreate } from "../actions";
+import { employeeUpdate, employeeCreate, employeeClear } from "../actions";
 import EmployeeForm from "./EmployeeForm";
 
 export class EmployeeCreate extends Component {
@@ -11,6 +11,10 @@ export class EmployeeCreate extends Component {
     const { name, phone, shift } = this.props;
     this.props.employeeCreate({ name, phone, shift: shift || "Monday" });
   };
+
+  componentWillMount() {
+    this.props.employeeClear();
+  }
 
   render() {
     return (
@@ -31,5 +35,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { employeeUpdate, employeeCreate }
+  { employeeUpdate, employeeCreate, employeeClear }
 )(EmployeeCreate);
